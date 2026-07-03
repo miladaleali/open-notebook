@@ -20,6 +20,7 @@ services:
       - SURREAL_PASSWORD=root
       - SURREAL_NAMESPACE=open_notebook
       - SURREAL_DATABASE=open_notebook
+      - API_URL=https://notebook-api.caissa.finance
     volumes:
       - notebook_data:/app/data
     depends_on:
