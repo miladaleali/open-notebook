@@ -7,8 +7,6 @@ services:
     # open_notebook service below, so the two always stay in sync.
     command: start --log info --user ${SURREAL_USER:-root} --pass ${SURREAL_PASSWORD:-root} rocksdb:/mydata/mydatabase.db
     user: root  # Required for bind mounts on Linux
-    ports:
-      - "8000:8000"
     volumes:
       - ./surreal_data:/mydata
     environment:
