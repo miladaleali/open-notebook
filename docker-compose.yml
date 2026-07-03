@@ -16,9 +16,6 @@ services:
 
   open_notebook:
     image: lfnovo/open_notebook:v1-latest
-    ports:
-      - "8502:8502"  # Web UI
-      - "5055:5055"  # REST API
     environment:
       # REQUIRED: Change this to your own secret string
       # This encrypts your API keys in the database
