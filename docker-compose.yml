@@ -1,24 +1,33 @@
+version: '3.8'
+
 services:
   surrealdb:
     image: surrealdb/surrealdb:v2
-    command: start --log info --user ${SURREAL_USER:-root} --pass ${SURREAL_PASSWORD:-root} rocksdb:/mydata/mydatabase.db
+    command: start --log info --user root --pass root rocksdb:/mydata/mydatabase.db
+    user: root
+    # ports block removed: Coolify handles internal routing. No need to expose DB ports publicly.
     volumes:
-      - ./surreal_data:/mydata
+      - surreal_data:/mydata
     restart: always
 
   open_notebook:
     image: lfnovo/open_notebook:v1-latest
-
-    expose:
-      - "8502"
-
+    # ports block removed: We will let Coolify map the public domain to port 8502.
     environment:
-      - OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret
+      - OPEN_NOTEBOOK_ENCRYPTION_KEY=${SERVICE_PASSWORD_ENCRYPTION_KEY} # Securely managed by Coolify
       - SURREAL_URL=ws://surrealdb:8000/rpc
-      - SURREAL_USER=${SURREAL_USER:-root}
-      - SURREAL_PASSWORD=${SURREAL_PASSWORD:-root}
+      - SURREAL_USER=root
+      - SURREAL_PASSWORD=root
       - SURREAL_NAMESPACE=open_notebook
       - SURREAL_DATABASE=open_notebook
-
+    volumes:
+      - notebook_data:/app/data
     depends_on:
       - surrealdb
+    restart: always
+
+volumes:
+  surreal_data:
+    name: surreal_data
+  notebook_data:
+    name: notebook_data
